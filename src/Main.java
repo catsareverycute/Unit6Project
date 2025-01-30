@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         // step 1: create a file object
-        File f = new File("/Users/andyfang/IdeaProjects/unit 6/src/input");
+        File f = new File("/src/input_file");
 
         String fileData = "";
         String bidData = "";
@@ -41,6 +41,8 @@ public class Main {
             int fourOfKind = 0;
             int fiveKind = 0;
             int highCard = 0;
+            int totalBid = 0;
+            int rank = 0;
 
             ArrayList<String> highCardList = new ArrayList();
             ArrayList<String> onePairList = new ArrayList();
@@ -49,6 +51,7 @@ public class Main {
             ArrayList<String> fullHouseList = new ArrayList();
             ArrayList<String> fourKindList = new ArrayList();
             ArrayList<String> fiveKindList = new ArrayList();
+            ArrayList<Hand> handsList = new ArrayList<>();
 
             for (String line : fileArray) {
                 System.out.println(line);
@@ -62,6 +65,8 @@ public class Main {
                         }
                     }
                 }
+                int currentBid = cardInformation.get(line);
+                System.out.println(currentBid);
                 System.out.println(count);
 
 
@@ -69,18 +74,21 @@ public class Main {
                     onePair += 1;
                     onePairList.add(line);
                     System.out.println("One Pair");
+                    rank = 1;
 
                 }
                 if (count == 2) {
                     twoPair += 1;
                     twoPairList.add(line);
                     System.out.println("Two Pair");
+                    rank = 2;
 
                 }
                 if(count == 3){
                     threeKind += 1;
                     threeKindList.add(line);
                     System.out.println("Three Kind");
+                    rank = 3;
                 }
 
                 if(count == 0){
@@ -93,20 +101,41 @@ public class Main {
                     fullHouse += 1;
                     fullHouseList.add(line);
                     System.out.println("Full House");
+                    rank = 4;
                 }
 
                 if(count == 6){
                     fourOfKind += 1;
                     fourKindList.add(line);
                     System.out.println("Four Kind ");
+                    rank = 5;
                 }
 
                 if(count == 10){
                     fiveKind += 1;
                     fiveKindList.add(line);
                     System.out.println("Five Kind ");
+                    rank = 6;
                 }
+
+                handsList.add(new Hand(line, currentBid, rank, lineList, cardInformation));
             }
+
+            sortHands(handsList);
+
+            int sortRanks = 1;
+            for (Hand hand : handsList) {
+                hand.setRank(sortRanks);
+                sortRanks++;
+            }
+
+            for (Hand hand : handsList) {
+                int currentRank = hand.getRank();
+                int currentBid = hand.getBid();
+                totalBid += currentRank * currentBid; 
+                System.out.println("Hand Rank: " + currentRank + ", Bid: " + currentBid + ", Total Bid: " + totalBid);
+            }
+
             System.out.println(onePairList);
             System.out.println(twoPairList);
             System.out.println(threeKindList);
@@ -130,7 +159,8 @@ public class Main {
                             "Number of three of a kind hands: "+ threeKind + "\n" +
                             "Number of two pair hands: "+ twoPair + "\n" +
                             "Number of one pair hands: "+ onePair + "\n" +
-                            "Number of high card hands "+ highCard
+                            "Number of high card hands: "+ highCard + "\n" +
+                            "Total Bid Value: " + totalBid
             );
 
         }
@@ -151,6 +181,83 @@ public class Main {
             ordered.add("King,Ace,Ace,Ace,Ace");
         }
         return ordered;
+    }
+
+    public static Integer rankCard(String card) {
+        Map<String, Integer> cardRank = new HashMap<>();
+        cardRank.put("Ace", 14);
+        cardRank.put("King", 13);
+        cardRank.put("Queen", 12);
+        cardRank.put("Jack", 11);
+        cardRank.put("10", 10);
+        cardRank.put("9", 9);
+        cardRank.put("8", 8);
+        cardRank.put("7", 7);
+        cardRank.put("6", 6);
+        cardRank.put("5", 5);
+        cardRank.put("4", 4);
+        cardRank.put("3", 3);
+        cardRank.put("2", 2);
+        return cardRank.get(card);
+    }
+
+    public static class Hand {
+        String hand;
+        int bid;
+        int rank;
+        String[] cards;  
+        Map<String, Integer> cardCount;
+
+        public Hand (String hand, int bid, int rank, String[] cards, Map<String, Integer> cardCount) {
+            this.hand = hand;
+            this.bid = bid;
+            this.rank = rank;
+            this.cards = cards;
+            this.cardCount = cardCount;
+        }
+
+        public int getRank() {
+            return rank;
+        }
+
+        public int getBid() {
+            return bid;
+        }
+
+        public void setRank(int rank) {
+            this.rank = rank;
+        }
+    }
+
+    public static void sortHands(List<Hand> hands) {
+        for (int i = 0; i < hands.size()-1; i++) {
+            for (int j = 0; j < hands.size() - 1 - i; j++) {
+                Hand one = hands.get(j);
+                Hand two = hands.get(j + 1);
+                
+                int rankTest = Integer.compare(one.getRank(), two.getRank());
+                
+                if (rankTest == 0) {
+                    rankTest = compareHands(one, two); 
+                }
+                
+
+                if (rankTest > 0) {
+                    hands.set(j, two);
+                    hands.set(j + 1, one);
+                }
+            }
+        }
+    }
+
+    public static int compareHands(Hand one, Hand two) {
+        for (int i = 0; i < 5; i++) {
+            int cardComparison = rankCard(one.cards[i]).compareTo(rankCard(two.cards[i]));
+            if (cardComparison != 0) {
+                return cardComparison;  
+            }
+        }
+        return 0;  
     }
 
 
