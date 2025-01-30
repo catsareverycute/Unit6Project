@@ -1,4 +1,3 @@
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -7,7 +6,7 @@ public class Main {
     public static void main(String[] args) {
 
         // step 1: create a file object
-        File f = new File("src/input_file");
+        File f = new File("src/input");
 
         String fileData = "";
         String bidData = "";
@@ -67,53 +66,53 @@ public class Main {
                     onePair += 1;
 
                     System.out.println("One Pair");
-                    rank = 1;
+                    rank = 2;
 
                 }
                 if (count == 2) {
                     twoPair += 1;
 
                     System.out.println("Two Pair");
-                    rank = 2;
+                    rank = 3;
 
                 }
                 if(count == 3){
                     threeKind += 1;
 
                     System.out.println("Three Kind");
-                    rank = 3;
+                    rank = 4;
                 }
 
                 if(count == 0){
                     highCard += 1;
-
                     System.out.println("High card");
+                    rank = 1;
                 }
 
                 if(count == 4){
                     fullHouse += 1;
 
                     System.out.println("Full House");
-                    rank = 4;
+                    rank = 5;
                 }
 
                 if(count == 6){
                     fourOfKind += 1;
 
                     System.out.println("Four Kind ");
-                    rank = 5;
+                    rank = 6;
                 }
 
                 if(count == 10){
                     fiveKind += 1;
 
                     System.out.println("Five Kind ");
-                    rank = 6;
+                    rank = 7;
                 }
 
                 handsList.add(new Hand(line, currentBid, rank, lineList, cardInformation));
             }
-
+            
             sortHands(handsList);
 
             int sortRanks = 1;
@@ -125,8 +124,9 @@ public class Main {
             for (Hand hand : handsList) {
                 int currentRank = hand.getRank();
                 int currentBid = hand.getBid();
-                totalBid += currentRank * currentBid; 
-                System.out.println("Hand Rank: " + currentRank + ", Bid: " + currentBid + ", Total Bid: " + totalBid);
+                totalBid += currentRank * currentBid;
+
+                System.out.println("Hand Rank: " + currentRank + ", Bid: " + currentBid + ", Total Bid: " + totalBid );
             }
 
 
@@ -171,7 +171,7 @@ public class Main {
         String hand;
         int bid;
         int rank;
-        String[] cards;  
+        String[] cards;
         HashMap<String, Integer> cardCount;
 
         public Hand (String hand, int bid, int rank, String[] cards, HashMap<String, Integer> cardCount) {
@@ -196,17 +196,16 @@ public class Main {
     }
 
     public static void sortHands(List<Hand> hands) {
-        for (int i = 0; i < hands.size()-1; i++) {
-            for (int j = 0; j < hands.size() - 1 - i; j++) {
+        for (int i = 0; i < hands.size() - 1; i++) {
+            for (int j = 0; j < hands.size() - i - 1; j++) {
                 Hand one = hands.get(j);
                 Hand two = hands.get(j + 1);
-                
+
                 int rankTest = Integer.compare(one.getRank(), two.getRank());
-                
+
                 if (rankTest == 0) {
-                    rankTest = compareHands(one, two); 
+                    rankTest = compareHands(one, two);
                 }
-                
 
                 if (rankTest > 0) {
                     hands.set(j, two);
@@ -220,10 +219,10 @@ public class Main {
         for (int i = 0; i < 5; i++) {
             int cardComparison = rankCard(one.cards[i]).compareTo(rankCard(two.cards[i]));
             if (cardComparison != 0) {
-                return cardComparison;  
+                return cardComparison;
             }
         }
-        return 0;  
+        return 0;
     }
 
 
