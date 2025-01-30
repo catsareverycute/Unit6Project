@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
 
         // step 1: create a file object
-        File f = new File("/src/input_file");
+        File f = new File("src/input_file");
 
         String fileData = "";
         String bidData = "";
@@ -44,13 +44,6 @@ public class Main {
             int totalBid = 0;
             int rank = 0;
 
-            ArrayList<String> highCardList = new ArrayList();
-            ArrayList<String> onePairList = new ArrayList();
-            ArrayList<String> twoPairList = new ArrayList();
-            ArrayList<String> threeKindList = new ArrayList();
-            ArrayList<String> fullHouseList = new ArrayList();
-            ArrayList<String> fourKindList = new ArrayList();
-            ArrayList<String> fiveKindList = new ArrayList();
             ArrayList<Hand> handsList = new ArrayList<>();
 
             for (String line : fileArray) {
@@ -72,48 +65,48 @@ public class Main {
 
                 if (count == 1) {
                     onePair += 1;
-                    onePairList.add(line);
+
                     System.out.println("One Pair");
                     rank = 1;
 
                 }
                 if (count == 2) {
                     twoPair += 1;
-                    twoPairList.add(line);
+
                     System.out.println("Two Pair");
                     rank = 2;
 
                 }
                 if(count == 3){
                     threeKind += 1;
-                    threeKindList.add(line);
+
                     System.out.println("Three Kind");
                     rank = 3;
                 }
 
                 if(count == 0){
                     highCard += 1;
-                    highCardList.add(line);
+
                     System.out.println("High card");
                 }
 
                 if(count == 4){
                     fullHouse += 1;
-                    fullHouseList.add(line);
+
                     System.out.println("Full House");
                     rank = 4;
                 }
 
                 if(count == 6){
                     fourOfKind += 1;
-                    fourKindList.add(line);
+
                     System.out.println("Four Kind ");
                     rank = 5;
                 }
 
                 if(count == 10){
                     fiveKind += 1;
-                    fiveKindList.add(line);
+
                     System.out.println("Five Kind ");
                     rank = 6;
                 }
@@ -136,21 +129,6 @@ public class Main {
                 System.out.println("Hand Rank: " + currentRank + ", Bid: " + currentBid + ", Total Bid: " + totalBid);
             }
 
-            System.out.println(onePairList);
-            System.out.println(twoPairList);
-            System.out.println(threeKindList);
-            onePairList = order(onePairList);
-            twoPairList = order(twoPairList);
-
-            // creating new empty list
-            // List Concatenation;
-            List<String> concatenated_list = new ArrayList<>();
-            concatenated_list.addAll(onePairList);
-            concatenated_list.addAll(twoPairList);
-            System.out.println(concatenated_list);
-
-            // get the bid value
-            System.out.println(cardInformation.get(concatenated_list.get(0)));
 
             System.out.println(
                     "Number of five of a kind hands: "+ fiveKind + "\n"  +
@@ -171,20 +149,8 @@ public class Main {
 
     }
 
-    public static ArrayList<String> order(ArrayList<String> line){
-        ArrayList<String> ordered = new ArrayList<>();
-        if(line.size() <= 1){
-            return line;
-        }
-
-        else {
-            ordered.add("King,Ace,Ace,Ace,Ace");
-        }
-        return ordered;
-    }
-
     public static Integer rankCard(String card) {
-        Map<String, Integer> cardRank = new HashMap<>();
+        HashMap<String, Integer> cardRank = new HashMap<>();
         cardRank.put("Ace", 14);
         cardRank.put("King", 13);
         cardRank.put("Queen", 12);
@@ -206,9 +172,9 @@ public class Main {
         int bid;
         int rank;
         String[] cards;  
-        Map<String, Integer> cardCount;
+        HashMap<String, Integer> cardCount;
 
-        public Hand (String hand, int bid, int rank, String[] cards, Map<String, Integer> cardCount) {
+        public Hand (String hand, int bid, int rank, String[] cards, HashMap<String, Integer> cardCount) {
             this.hand = hand;
             this.bid = bid;
             this.rank = rank;
