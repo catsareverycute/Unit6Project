@@ -54,6 +54,7 @@ public class Main {
 
                 String[] lineList = line.split(",");
                 String[] jackLineList = line.split(",");
+                String[] replaceJackBack = line.split(",");
 
                 if(line.contains("Jack")){
                     System.out.println("Yes Jack");
@@ -64,7 +65,6 @@ public class Main {
                             jackLineList[i] = replace;
                         }
                     }
-                    System.out.println(Arrays.toString(jackLineList));
                 }
 
                 int count = 0;
@@ -174,6 +174,7 @@ public class Main {
                 int currentRank = hand.getRank();
                 int currentBid = hand.getBid();
                 totalJackBid += currentRank * currentBid;
+                System.out.println("Hand Rank: " + currentRank + ", Bid: " + currentBid + ", Total Jack Bid: " + totalJackBid );
             }
 
             System.out.println(
@@ -346,7 +347,5 @@ public class Main {
         }
         return rank;
     }
-
-
-
+    
 }
