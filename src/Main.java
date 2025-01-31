@@ -33,6 +33,7 @@ public class Main {
             // a String array where every item in the array is a line from the file
             String[] fileArray = fileData.split("\n");
             System.out.println(Arrays.toString(fileArray));
+
             int onePair = 0;
             int twoPair = 0;
             int threeKind = 0;
@@ -41,49 +42,77 @@ public class Main {
             int fiveKind = 0;
             int highCard = 0;
             int totalBid = 0;
+            int totalJackBid = 0;
             int rank = 0;
+            int rankJack = 0;
 
             ArrayList<Hand> handsList = new ArrayList<>();
+            ArrayList<Hand> jackHandsList = new ArrayList<>();
 
             for (String line : fileArray) {
                 System.out.println(line);
+
                 String[] lineList = line.split(",");
+                String[] jackLineList = line.split(",");
+
+                if(line.contains("Jack")){
+                    System.out.println("Yes Jack");
+                    String replace = highestFrequency(jackLineList);
+                    System.out.println(replace);
+                    for(int i = 0; i < lineList.length; i++){
+                        if(jackLineList[i].equals("Jack")){
+                            jackLineList[i] = replace;
+                        }
+                    }
+                    System.out.println(Arrays.toString(jackLineList));
+                }
+
                 int count = 0;
+                int jackCount = 0;
+
+                // normal list loop
                 for(int i = 0; i < lineList.length; i++){
                     for(int j = i+1; j < lineList.length; j++){
                         if(lineList[i].equals(lineList[j])){
-
                             count ++;
                         }
                     }
                 }
+
+                // jack list loop
+                for(int i = 0; i < jackLineList.length; i++){
+                    for(int j = i+1; j < jackLineList.length; j++){
+                        if(jackLineList[i].equals(jackLineList[j])){
+                            jackCount ++;
+                        }
+                    }
+                }
+
                 int currentBid = cardInformation.get(line);
                 System.out.println(currentBid);
                 System.out.println(count);
 
 
-                if (count == 1) {
+                if (count == 1 ) {
                     onePair += 1;
-
                     System.out.println("One Pair");
                     rank = 2;
 
                 }
                 if (count == 2) {
                     twoPair += 1;
-
                     System.out.println("Two Pair");
                     rank = 3;
-
                 }
-                if(count == 3){
+
+                if(count == 3 ){
                     threeKind += 1;
 
                     System.out.println("Three Kind");
                     rank = 4;
                 }
 
-                if(count == 0){
+                if(count == 0 ){
                     highCard += 1;
                     System.out.println("High card");
                     rank = 1;
@@ -91,32 +120,42 @@ public class Main {
 
                 if(count == 4){
                     fullHouse += 1;
-
                     System.out.println("Full House");
                     rank = 5;
                 }
 
-                if(count == 6){
+                if(count == 6 ){
                     fourOfKind += 1;
 
                     System.out.println("Four Kind ");
                     rank = 6;
                 }
 
-                if(count == 10){
+                if(count == 10 ){
                     fiveKind += 1;
-
                     System.out.println("Five Kind ");
                     rank = 7;
                 }
 
+                rankJack = getJackRank(jackCount);
+
+
                 handsList.add(new Hand(line, currentBid, rank, lineList, cardInformation));
+                jackHandsList.add(new Hand(line, currentBid, rankJack, lineList, cardInformation));
+
             }
-            
+
             sortHands(handsList);
+            sortHands(jackHandsList);
 
             int sortRanks = 1;
             for (Hand hand : handsList) {
+                hand.setRank(sortRanks);
+                sortRanks++;
+            }
+            // sort the jack hand list
+            sortRanks = 1;
+            for(Hand hand : jackHandsList){
                 hand.setRank(sortRanks);
                 sortRanks++;
             }
@@ -129,6 +168,13 @@ public class Main {
                 System.out.println("Hand Rank: " + currentRank + ", Bid: " + currentBid + ", Total Bid: " + totalBid );
             }
 
+            // jack
+
+            for (Hand hand : jackHandsList) {
+                int currentRank = hand.getRank();
+                int currentBid = hand.getBid();
+                totalJackBid += currentRank * currentBid;
+            }
 
             System.out.println(
                     "Number of five of a kind hands: "+ fiveKind + "\n"  +
@@ -138,7 +184,8 @@ public class Main {
                             "Number of two pair hands: "+ twoPair + "\n" +
                             "Number of one pair hands: "+ onePair + "\n" +
                             "Number of high card hands: "+ highCard + "\n" +
-                            "Total Bid Value: " + totalBid
+                            "Total Bid Value: " + totalBid + "\n" +
+                            "Total Bid Value With Jacks Wild: " + totalJackBid
             );
 
         }
@@ -155,6 +202,24 @@ public class Main {
         cardRank.put("King", 13);
         cardRank.put("Queen", 12);
         cardRank.put("Jack", 11);
+        cardRank.put("10", 10);
+        cardRank.put("9", 9);
+        cardRank.put("8", 8);
+        cardRank.put("7", 7);
+        cardRank.put("6", 6);
+        cardRank.put("5", 5);
+        cardRank.put("4", 4);
+        cardRank.put("3", 3);
+        cardRank.put("2", 2);
+        return cardRank.get(card);
+    }
+
+    public static Integer rankCardJack(String card) {
+        HashMap<String, Integer> cardRank = new HashMap<>();
+        cardRank.put("Ace", 14);
+        cardRank.put("King", 13);
+        cardRank.put("Queen", 12);
+        cardRank.put("Jack", 1);
         cardRank.put("10", 10);
         cardRank.put("9", 9);
         cardRank.put("8", 8);
@@ -224,6 +289,64 @@ public class Main {
         }
         return 0;
     }
+
+    public static String highestFrequency(String[] cardList){
+        int maxcount = 0;
+        String maxFreq = "";
+        for (int i = 0; i < cardList.length; i++) {
+            int count = 0;
+            for (int j = 0; j < cardList.length; j++) {
+                if (cardList[i].equals(cardList[j])){
+                    count++;
+                }
+            }
+
+            if(count == maxcount){
+                if(rankCardJack(maxFreq) < rankCardJack(cardList[i])){
+                    maxFreq = cardList[i];
+                }
+            }
+
+            if (count > maxcount) {
+                maxcount = count;
+                maxFreq = cardList[i];
+            }
+        }
+        return maxFreq;
+    }
+
+    public static int getJackRank(int count){
+        int rank = 0;
+        if (count == 1 ) {
+            rank = 2;
+
+        }
+        if (count == 2) {
+            rank = 3;
+        }
+
+        if(count == 3 ){
+            rank = 4;
+        }
+
+        if(count == 0 ){
+            rank = 1;
+        }
+
+        if(count == 4){
+            rank = 5;
+        }
+
+        if(count == 6 ){
+            rank = 6;
+        }
+
+        if(count == 10 ){
+            rank = 7;
+        }
+        return rank;
+    }
+
 
 
 }
