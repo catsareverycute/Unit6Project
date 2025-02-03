@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -219,6 +220,27 @@ public class Hand {
         }
         return count;
     }
+
+    public void sortRanks(ArrayList<Hand> handsList){
+        int sortRanks = 1;
+        for (Hand hand : handsList) {
+            hand.setRank(sortRanks);
+            sortRanks++;
+        }
+    }
+
+    public int totalBid(ArrayList<Hand> handsList) {
+        int totalBid = 0;
+        for (Hand hand : handsList) {
+            int currentRank = hand.getRank();
+            int currentBid = hand.getBid();
+            totalBid += currentRank * currentBid;
+        }
+        return totalBid;
+
+    }
+
+
 
 
 }

@@ -97,40 +97,15 @@ public class Main {
                         "Number of high card hands: " + highCard
         );
 
+        // Sort the
         h.sortHands(handsList, false);
-
-        int sortRanks = 1;
-        for (Hand hand : handsList) {
-            hand.setRank(sortRanks);
-            sortRanks++;
-        }
-
-        for (Hand hand : handsList) {
-            int currentRank = hand.getRank();
-            int currentBid = hand.getBid();
-            totalBid += currentRank * currentBid;
-
-        }
-
+        h.sortRanks(handsList);
+        totalBid = h.totalBid(handsList);
         System.out.println("Total Bid Value: " + totalBid);
 
         h.sortHands(jackHandsList, true);
-
-        // sort the jack hand list
-        sortRanks = 1;
-        for (Hand jackHand : jackHandsList) {
-            jackHand.setRank(sortRanks);
-            sortRanks++;
-        }
-
-        // jack
-
-        for (Hand jackHand : jackHandsList) {
-            int currentRank = jackHand.getRank();
-            int currentBid = jackHand.getBid();
-            totalJackBid += currentRank * currentBid;
-        }
-
+        h.sortRanks(jackHandsList);
+        totalJackBid = h.totalBid(jackHandsList);
         System.out.println("Total Bid Value With Jacks Wild: " + totalJackBid);
 
     }
