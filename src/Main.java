@@ -124,6 +124,7 @@ public class Main {
                 fileData += currentLine + "\n";
                 // hashmap to get the bid amount specific to the cards
             }
+            s.close();
         } catch (FileNotFoundException fe) {
             System.out.println("File was not found");
             System.exit(1);
@@ -146,6 +147,7 @@ public class Main {
                 // hashmap to get the bid amount specific to the cards
                 cardInformation.put(currentLine, bid );
             }
+            s.close();
         } catch (FileNotFoundException fe) {
             System.out.println("File was not found");
             System.exit(1);

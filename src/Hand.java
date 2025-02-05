@@ -1,11 +1,9 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 /**
- * The Person class represents a Person. A person is a human with a name, age
- * and a hobby
+ * The Hand class represents a Hand. A hand has a bid, rank, cards, and their card information.
  */
 
 public class Hand {
@@ -15,7 +13,14 @@ public class Hand {
     String[] cards;
     HashMap<String, Integer> cardCount;
 
-
+    /**
+     * Constructor of Hand object
+     * @param hand the cards in the hand together
+     * @param bid the bid for the cards
+     * @param rank the rank of the hand
+     * @param cards each card in the hand
+     * @param cardCount both hand and bid in a hashmap
+    */
     public Hand(String hand, int bid, int rank, String[] cards, HashMap<String, Integer> cardCount) {
         this.hand = hand;
         this.bid = bid;
@@ -24,27 +29,47 @@ public class Hand {
         this.cardCount = cardCount;
     }
 
+    /**
+     * Another constructor of Hand object but with no parameters
+     */
     public Hand() {
 
     }
 
+    /**
+     * Getter for rank
+     */
     public int getRank() {
         return rank;
     }
 
+    /**
+     * Getter for bid
+     */
     public int getBid() {
         return bid;
     }
 
+    /**
+     * Setter for rank
+     * @param rank the new rank value to replace rank
+     */
     public void setRank(int rank) {
         this.rank = rank;
     }
 
+    /**
+     * Getter for hand
+     */
     public String getHand() {
         return hand;
     }
 
-
+    /**
+     * Getter for rank (value) of the hand
+     * @param count initial rank based on type (e.g. high card, one pair...)
+     * @return initial rank of the hand
+     */
     public int getRank(int count) {
         int rank = 0;
 
@@ -78,6 +103,12 @@ public class Hand {
         return rank;
     }
 
+    /**
+     * Ranks the card based on its type (Ace = 14, etc.)
+     * @param card specific card of a hand
+     * @param jackWild boolean to see if Jack = 11 (false) or 1 (true), 
+     * @return rank of the card
+     */
     public Integer rankCard(String card, boolean jackWild) {
         HashMap<String, Integer> cardRank = new HashMap<>();
         cardRank.put("Ace", 14);
@@ -133,6 +164,13 @@ public class Hand {
         }
     }
 
+    /**
+     * Iterates through both hands to compare each card's rank
+     * @param one one hand object
+     * @param two another hand object
+     * @param jack boolean to see if comparison should be done with jackWild true/false; Jack = 11 (false) or Jack = 1 (true)
+     * @return 0 if both hands are the same; positive number if hand one has a card of greater value in comparison to a card in hand two at the same index; negative if the other way around
+     */
     public int compareHands(Hand one, Hand two, boolean jack) {
         for (int i = 0; i < 5; i++) {
             int cardComparison = 0;
@@ -150,6 +188,11 @@ public class Hand {
         return 0;
     }
 
+    /**
+     * Checks for the highest frequency card in the hand
+     * @param cardList a specific hand
+     * @return card with max (highest if applicable) frequency or highest rank if tie occurs
+     */
     public String highestFrequency(String[] cardList) {
         int maxcount = 0;
         String maxFreq = "";
@@ -189,6 +232,11 @@ public class Hand {
         return maxFreq;
     }
 
+    /**
+     * Replaces all Jacks with what highestFrequency returns (highest frequency card or top value card)
+     * @param line a specific hand
+     * @return each card of the hand in a list but Jacks are replaced
+     */
     public String[] replaceAllJacks(String line){
         // Part 3: check the hands that have a jack
         String[] jackLineList = line.split(",");
@@ -208,6 +256,11 @@ public class Hand {
         return jackLineList;
     }
 
+    /**
+     * Counts the cards that are the same; used to determine hand type
+     * @param cards cards of a specific hand
+     * @return count of cards that are the same
+     */
     public int countSimilarities(String[] cards){
         int count  = 0;
         // Nested for loop to count how many similarities
@@ -221,6 +274,10 @@ public class Hand {
         return count;
     }
 
+    /**
+     * Gives the list of hands their updated rank after sorting 
+     * @param handsList the list of all the hands
+     */
     public void sortRanks(ArrayList<Hand> handsList){
         int sortRanks = 1;
         for (Hand hand : handsList) {
@@ -229,6 +286,11 @@ public class Hand {
         }
     }
 
+    /**
+     * Calculates total bid using the bids of the hands and their rank
+     * @param handsList the list of hands
+     * @return total bid of all hands using bids and ranks
+     */
     public int totalBid(ArrayList<Hand> handsList) {
         int totalBid = 0;
         for (Hand hand : handsList) {
